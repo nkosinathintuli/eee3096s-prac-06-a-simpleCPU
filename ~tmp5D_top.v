@@ -8,7 +8,7 @@ module simple_cpu( clk, rst, instruction );
 
     input [INSTR_WIDTH-1:0] instruction;
     input clk, rst;
-
+ 
     //Wires for connecting to data memory    
     wire [ADDR_BITS-1:0] addr_i;
     wire [DATA_WIDTH-1:0] data_in_i, data_out_i, result2_i ;
@@ -22,9 +22,9 @@ module simple_cpu( clk, rst, instruction );
     //Wire for connecting to CU
     wire [DATA_WIDTH-1:0]offset_i;
     wire sel1_i, sel3_i;
-    wire [DATA_WIDTH-1:0] operand_1_i, operand_2_i;
+    wire [DATA_WIDTH-1:0] operand_1_i, operand_2_i,newreg0_i,newreg1_i, newreg2_i,newreg3_i;
 
-    
+   
     
     //Instantiating an alu1
     alu #(DATA_WIDTH) alu1 (clk, operand_a_i, operand_b_i, opcode_i, result1_i);
@@ -34,7 +34,7 @@ module simple_cpu( clk, rst, instruction );
     
     //Instantiation of a CU
     CU  #(DATA_WIDTH,ADDR_BITS, INSTR_WIDTH) CU1(clk, rst, instruction, result2_i,
-        operand_1_i, operand_2_i, offset_i, opcode_i, sel1_i, sel3_i, wen_i);
+        operand_1_i, operand_2_i, offset_i, opcode_i, sel1_i, sel3_i, wen_i,newreg0_i,newreg1_i, newreg2_i,newreg3_i);
     
 
     
@@ -47,44 +47,5 @@ module simple_cpu( clk, rst, instruction );
     
     //Connect datamem to CU
     assign result2_i = (sel1_i == 0) ? data_out_i : (sel1_i == 1) ? result1_i : 8'bx;  
-    
-
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

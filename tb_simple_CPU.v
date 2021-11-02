@@ -8,11 +8,15 @@ module tb_simple_CPU;
    
     reg clk, rst;
     reg [INSTR_WIDTH-1:0] instruction;
-
+  reg [DATA_WIDTH-1:0] output1;
+  
+   
     
     simple_cpu  #(DATA_WIDTH,ADDR_BITS,INSTR_WIDTH) SCPU_DUT(clk, rst, instruction);
     
     initial begin
+        $dumpfile("dump.vcd");
+      	$dumpvars();      
         clk = 1'b1;
         rst = 1'b1;
         instruction = 20'd0;
@@ -29,33 +33,38 @@ module tb_simple_CPU;
                                         //ADD:    reg0  = reg1 + reg3   //1+3=4
         //In the instruction this is:    (instr)  (X1)    (X2)   (X3)  
         instruction = 20'b01000111000000000000;
-        repeat(8) #1 clk=!clk; //4 rising edges
+      repeat(8) #1 clk=!clk; //4 rising edges
         
-                                        //ADD:    reg1  = reg0 + reg3   //4+3=7
+                                  //ADD:    reg1  = reg0 + reg3   //4+3=7
         //In the instruction this is:    (instr)  (X1)    (X2)   (X3)
         instruction = 20'b01010011000000000000;
-        repeat(6) #1 clk=!clk; 
+      repeat(8) #1 clk=!clk; 
                 
                                          //SUB:   reg3  = reg0 - reg2  //4-2=2  
        //In the instruction this is:    (instr)  (X1)    (X2)   (X3) 
         instruction = 20'b01110010000000000001;
-        repeat(6) #1 clk=!clk;
+      repeat(6) #1 clk=!clk;
         
                                          //STORE_R:   DATA_MEM(reg2 + 15) = reg1  //DATA_MEM(2+15)=7  
         //In the instruction this is:    (instr)               (X2)         (X1)
         instruction = 20'b11011000000011110000;
-        repeat(6) #1 clk=!clk;
+      repeat(6) #1 clk=!clk;
         
-                                           //STORE_R:   DATA_MEM(reg3 + 20) = reg0  //DATA_MEM(2+20)= 4  
+      //STORE_R:   DATA_MEM(reg3 + 22) = reg0  //DATA_MEM(2+2)= 4  
         //In the instruction this is:    (instr)                 (X2)         (X1)
         instruction = 20'b11001100000101100000;
-        repeat(6) #1 clk=!clk;
+      repeat(6) #1 clk=!clk;
 
                                            //LOAD_R:   DATA_MEM(reg2 + 15) = reg3  //reg3 = DATA_MEM(2+15)  -> reg3 becomes 7  
         //In the instruction this is:    (instr)                (X2)         (X1)
         instruction = 20'b10111000000011110000;
-        repeat(7) #1 clk=!clk;
+      repeat(6) #1 clk=!clk;
         
+      
+      //LOAD_R:   DATA_MEM(reg2 + 15) = reg3  //reg3 = DATA_MEM(2+15)  -> reg3 becomes 7  
+        //In the instruction this is:    (instr)                (X2)         (X1)
+        instruction = 20'b10011000000011110000;
+      repeat(6) #1 clk=!clk;
         
     end
     
